@@ -27,4 +27,11 @@ public class DialogResultHandler implements FingerprintDialog.DialogResultListen
       FingerprintAuthModule.inProgress = false;
       errorCallback.invoke("cancelled", FingerprintAuthConstants.AUTHENTICATION_CANCELED);
     }
+
+    @Override
+    public void onMaxLimited() {
+      FingerprintAuthModule.inProgress = false;
+      errorCallback.invoke("cancelled", FingerprintAuthConstants.AUTHENTICATION_FAILED);
+    }
+    
 }

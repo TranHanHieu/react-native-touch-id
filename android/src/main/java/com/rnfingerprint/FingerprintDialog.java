@@ -12,8 +12,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import android.widget.Toast;
 import com.facebook.react.bridge.ReadableMap;
+import android.view.animation.AnimationUtils;
 
 public class FingerprintDialog extends DialogFragment implements FingerprintHandler.Callback {
 
@@ -34,6 +35,7 @@ public class FingerprintDialog extends DialogFragment implements FingerprintHand
     private String sensorDescription = "";
     private String sensorErrorDescription = "";
     private String errorText = "";
+    private int counter = 0;
 
     @Override
     public void onAttach(Context context) {
@@ -161,6 +163,8 @@ public class FingerprintDialog extends DialogFragment implements FingerprintHand
         void onError(String errorString, int errorCode);
 
         void onCancelled();
+
+        void onMaxLimited();
     }
 
     @Override
@@ -172,9 +176,21 @@ public class FingerprintDialog extends DialogFragment implements FingerprintHand
 
     @Override
     public void onError(String errorString, int errorCode) {
+        this.counter += 1;
+        if (this.counter >= 5) {
+            Toast.makeText(this.getContext(), errorCode + "", Toast.LENGTH_LONG).show();
+            this.isAuthInProgress = false;
+            this.mFingerprintHandler.endAuth();
+            this.dialogCallback.onMaxLimited();
+            dismiss();
+            // return;
+        }
+        this.mFingerprintError.setVisibility(View.VISIBLE);
         this.mFingerprintError.setText(errorString);
         this.mFingerprintImage.setColorFilter(this.imageErrorColor);
         this.mFingerprintSensorDescription.setText(this.sensorErrorDescription);
+        this.mFingerprintError.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.drawable.shake));
+
     }
 
     @Override
