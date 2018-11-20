@@ -35,6 +35,7 @@ public class FingerprintDialog extends DialogFragment implements FingerprintHand
     private String sensorDescription = "";
     private String sensorErrorDescription = "";
     private String errorText = "";
+    private String errorMaxLimited = "";
     private int counter = 0;
 
     @Override
@@ -136,6 +137,13 @@ public class FingerprintDialog extends DialogFragment implements FingerprintHand
             this.dialogTitle = config.getString("title");
         }
 
+        if (config.hasKey("errorAndroid")) {
+            this.errorText = config.getString("errorAndroid");
+        }
+
+        if (config.hasKey("errorMaxLimitedAndroid")) {
+            this.errorMaxLimited = config.getString("errorMaxLimitedAndroid");
+        }
         if (config.hasKey("cancelText")) {
             this.cancelText = config.getString("cancelText");
         }
@@ -178,7 +186,7 @@ public class FingerprintDialog extends DialogFragment implements FingerprintHand
     public void onError(String errorString, int errorCode) {
         this.counter += 1;
         if (this.counter >= 5) {
-            Toast.makeText(this.getContext(), errorCode + "", Toast.LENGTH_LONG).show();
+            Toast.makeText(this.getContext(), this.errorMaxLimited, Toast.LENGTH_LONG).show();
             this.isAuthInProgress = false;
             this.mFingerprintHandler.endAuth();
             this.dialogCallback.onMaxLimited();
@@ -186,7 +194,7 @@ public class FingerprintDialog extends DialogFragment implements FingerprintHand
             // return;
         }
         this.mFingerprintError.setVisibility(View.VISIBLE);
-        this.mFingerprintError.setText(errorString);
+        this.mFingerprintError.setText(this.errorText);
         this.mFingerprintImage.setColorFilter(this.imageErrorColor);
         this.mFingerprintSensorDescription.setText(this.sensorErrorDescription);
         this.mFingerprintError.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.drawable.shake));
