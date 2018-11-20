@@ -186,7 +186,7 @@ public class FingerprintDialog extends DialogFragment implements FingerprintHand
     public void onError(String errorString, int errorCode) {
         this.counter += 1;
         if (this.counter >= 5) {
-            Toast.makeText(this.getContext(), this.errorMaxLimited, Toast.LENGTH_LONG).show();
+            // Toast.makeText(this.getContext(), this.errorMaxLimited, Toast.LENGTH_LONG).show();
             this.isAuthInProgress = false;
             this.mFingerprintHandler.endAuth();
             this.dialogCallback.onMaxLimited();
