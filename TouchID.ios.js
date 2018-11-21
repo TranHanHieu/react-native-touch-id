@@ -6,7 +6,7 @@
 
 import { NativeModules } from 'react-native';
 const NativeTouchID = NativeModules.TouchID;
-const ERRORS = require('./data/errors');
+const ERRORS = require('./data/errorsiOS');
 
 /**
  * High-level docs for the TouchID iOS API can be written here.
